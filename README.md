@@ -14,6 +14,9 @@
 개발 과정에서 발생한 RF 통신 불안정과 저속 진동 문제를  
 오실로스코프·데이터 로그 기반으로 진단해 PCB 재설계와 제어 파라미터 조정으로 해결했습니다.
 
+---
+
+## 완성 결과물
 <img width="1960" height="1016" alt="Image" src="https://github.com/user-attachments/assets/7a624965-8e17-4323-af49-88438761a222" />
 
 ---
@@ -101,6 +104,22 @@
 | PCB 설계 | KiCad, EasyEDA |
 | 계측 | Oscilloscope, VESC Tool |
 | 상위 처리 | Raspberry Pi 5, Faster-Whisper STT |
+
+---
+
+## Hardware
+
+| 부품 | 사양 |
+|------|------|
+| MCU | STM32F103 x2 (Transmit / Receive) |
+| BLDC Motor | BDUAV 5065 140KV x3 |
+| ESC | Makerbase VESC MINI 6.7 PRO x3 |
+| RF 모듈 | nRF24L01 |
+| 배터리 | 3S LiPo 5000mAh |
+| 상위 처리 | Raspberry Pi 5 |
+| PCB | 자체 설계 쉴드 (KiCad, EasyEDA) |
+| 감속기 | 풀리(HTD3M): 20T, 56T, 106T | 벨트(HTD3M): 279mm, 589mm |
+| 섀시, 휠 | 자체 설계, 3D 출력 (PLA+) |
 
 ---
 
