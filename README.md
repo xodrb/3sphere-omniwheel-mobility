@@ -140,5 +140,5 @@ UART로 STM32에 전달하는 State Machine 구조로 구현했습니다.
 
 | 저장소 | 설명 |
 |--------|------|
-| [3sphere-wheel-transmit](https://github.com/xodrb/3sphere-wheel-transmit) | Transmit 단독 저장소 (구버전) |
-| [3sphere-wheel-receive](https://github.com/xodrb/3sphere-wheel-receive) | Receive 단독 저장소 (구버전) |
+| [3sphere-wheel-transmit](https://github.com/xodrb/3sphere-wheel-transmit) | Transmit 펌웨어 (폴링→인터럽트→State Machine) |
+| [3sphere-wheel-receive](https://github.com/xodrb/3sphere-wheel-receive) | Receive 펌웨어 (폴링→인터럽트, 모터 제어) |
