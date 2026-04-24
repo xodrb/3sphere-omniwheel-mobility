@@ -118,7 +118,7 @@
 | 배터리 | 3S LiPo 5000mAh |
 | 상위 처리 | Raspberry Pi 5 |
 | PCB | 자체 설계 쉴드 (KiCad, EasyEDA) |
-| 감속기 | 풀리(HTD3M): 20T, 56T, 106T | 벨트(HTD3M): 279mm, 589mm |
+| 감속기 | 풀리(HTD3M): 20T, 56T, 106T / 벨트(HTD3M): 279mm, 589mm |
 | 섀시, 휠 | 자체 설계, 3D 출력 (PLA+) |
 
 ---
