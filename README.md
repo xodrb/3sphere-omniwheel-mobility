@@ -123,6 +123,12 @@
 
 ---
 
+## 음성인식 제어
+Raspberry Pi 5에서 Faster-Whisper STT로 음성 명령을 텍스트로 변환,
+UART로 STM32에 전달하는 State Machine 구조로 구현했습니다.
+
+---
+
 ## 수상
 
 - **2025 한국 Maker Faire 과학기술정보통신부 장관상 (최우수상)**
