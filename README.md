@@ -14,6 +14,9 @@
 개발 과정에서 발생한 RF 통신 불안정과 저속 진동 문제를  
 오실로스코프·데이터 로그 기반으로 진단해 PCB 재설계와 제어 파라미터 조정으로 해결했습니다.
 
+<img width="792" height="735" alt="Image" src="https://github.com/user-attachments/assets/16cf88b1-5a1a-4412-93d8-6622d8f8bc3c" />
+<img width="883" height="1004" alt="Image" src="https://github.com/user-attachments/assets/c63fbb0d-cc47-49a3-94da-9d9d8bfc3bd8" />
+
 ---
 
 ## 시스템 아키텍처
