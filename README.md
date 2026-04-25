@@ -43,17 +43,17 @@
 
 | Branch | 설명 |
 |--------|------|
-| `master` | 폴링 기반 기본 동작 버전 |
-| `feature/interrupt-conversion` | 인터럽트 구조로 전환한 버전 |
-| `State_Machine` | RPI5 UART 음성인식 값 수신 State Machine 버전 |
+| `master` | 폴링 기반 ADC + HAL_Delay(20ms) RF 송신 |
+| `feature/interrupt-conversion` | TIM2(50Hz) + ADC DMA 3채널 동시 수집 + WFI 저전력 구조로 전환 |
+| `State_Machine` | UART3로 RPI5 음성인식 명령 수신<br>ST_IDLE / ST_JOYSTICK / ST_VOICE 3상태 머신 구현<br>VOICE_MAP으로 방향 명령 → ADC값 매핑 |
 
 ### Receive
 
 | Branch | 설명 |
 |--------|------|
-| `master` | 폴링 기반 기본 동작 버전 |
-| `interrupt-conversion` | 인터럽트 구조로 전환한 버전 |
-| `kiwiDrive_Modify` | 저속 진동 원인을 역기구학 오류로 오판, 코드 수정 시도 (실제 원인: 모터 제조 공차 + PID 설정 한계) |
+| `master` | 폴링 기반 RF 수신 + TIM1 PWM으로 VESC 3개 PPM 제어 |
+| `interrupt-conversion` | nRF24 IRQ 인터럽트 기반 수신 구조로 전환 |
+| `kiwiDrive_Modify` | PPM → CAN Bus 전환 (ERPM 기반 속도 제어)<br>TIM3 Watchdog (100ms 무신호 시 모터 자동 정지)<br>E-Stop 래치 기능 추가<br>저속 진동 원인을 역기구학으로 오판, 코드 수정 시도 흔적<br>(실제 원인: 모터 제조 공차 + PID 설정 한계로 해결) 
 
 ---
 
@@ -79,7 +79,7 @@
 | **해결** | Minimum ERPM 900 → 50, PID Kp 0.00400 → 0.00075 재설정 |
 | **결과** | 저속 구간 전류 스파이크 **10A+ → 0.7A 이내** 감소, 30회 반복 검증 |
 
-> `kiwiDrive_Modify` 브랜치: 역기구학 오류로 처음 오판했던 수정 시도 흔적이 그대로 남아있습니다.
+> `kiwiDrive_Modify` 브랜치: 역기구학 오류로 처음 오판했던 코드 수정 시도 흔적이 남아있습니다.
 
 ---
 
@@ -87,7 +87,7 @@
 
 | | |
 |---|---|
-| **문제** | PPM 방식은 배선 9가닥, 단방향 구조, 다중 노드 제어 불가 |
+| **문제** | PPM 방식 배선 9가닥, 단방향 구조, 다중 노드 제어·상태 모니터링 불가 |
 | **해결** | STM32 + VESC 3개 데이지체인 CAN Bus 구조 전환, 종단저항 배치, 하네스 직접 제작 |
 | **결과** | 배선 **9가닥 → 3가닥**, 양방향 통신, 9시간 37팀 현장 운용 통신 단절 없음 |
 
@@ -97,13 +97,15 @@
 
 | 분류 | 내용 |
 |------|------|
-| MCU | STM32F103 (Transmit, Receive) |
-| RTOS | FreeRTOS (Task, Queue, Priority 학습 및 적용) |
-| 통신 | nRF24L01 RF, CAN Bus, SPI, UART |
-| 모터 제어 | VESC ESC, BLDC, PID 튜닝, Kiwi Drive 역기구학 |
-| PCB 설계 | KiCad, EasyEDA |
-| 계측 | Oscilloscope, VESC Tool |
-| 상위 처리 | Raspberry Pi 5, Faster-Whisper STT |
+| MCU | STM32F103 x2 (Transmit / Receive) |
+| 통신 | nRF24L01 RF(SPI), CAN Bus, UART |
+| 타이머 | TIM1(PWM 20ms), TIM2(ADC 트리거 50Hz), TIM3(Watchdog 50ms) |
+| ADC | DMA 3채널 동시 수집 (X·Y·Z 조이스틱) |
+| 제어 | Kiwi Drive 역기구학, ERPM 기반 속도 제어 |
+| 안전 | E-Stop 래치, Watchdog 타임아웃 자동 정지 |
+| 음성인식 | Faster-Whisper STT → UART3 → State Machine |
+| PCB | KiCad·EasyEDA 직접 설계·발주 |
+| 3D 설계 | Fusion360 (섀시·감속기·구형 바퀴) |
 
 ---
 
@@ -124,9 +126,17 @@
 ---
 
 ## 음성인식 제어
-Raspberry Pi 5에서 Faster-Whisper STT로 음성 명령을 텍스트로 변환,
-UART로 STM32에 전달하는 State Machine 구조로 구현했습니다.
 
+Raspberry Pi 5에서 Faster-Whisper STT로 음성 명령을 텍스트로 변환,  
+UART3으로 STM32에 전달하는 State Machine 구조로 구현했습니다.
+
+| 명령 | 동작 |
+|------|------|
+| 전진 | Y축 최대값 |
+| 후진 | Y축 최소값 |
+| 좌이동 | X축 최소값 |
+| 우이동 | X축 최대값 |
+| 정지 | 중립값 |
 ---
 
 ## 수상
